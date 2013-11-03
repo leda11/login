@@ -1,0 +1,44 @@
+/**
+* Description: Core theme for Handy
+*/
+
+/**
+* Structure
+*/
+html{}
+body{
+   background-color:#fff;
+   font: 1em Verdana, Arial, Helvetica, sans-serif;
+}
+
+#header,
+#main,
+#footer {
+   margin:0 auto;
+   width:970px;   
+   padding: 1em;
+}
+#header{
+	background-color:#E592B1;
+	color:#fff;
+} 
+#main {background-color:#FBE4F0;}
+#footer{
+	background-color:#EEDDF8;
+	font: 0.8em Verdana, Arial, Helvetica, sans-serif;
+}
+
+#textInput {
+	width: 400px;
+	height: 100px;
+}
+
+#comment{
+	background-color:#f6f6f6;
+	border:1px dotted #ccc;
+	margin-bottom:1em;
+	padding:0.5em;
+	font-size: 10px;
+}
+	
+	
