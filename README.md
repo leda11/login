@@ -1,4 +1,4 @@
-user
+login
 ====
 
 PHPMVC mom04
