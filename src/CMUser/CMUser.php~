@@ -42,7 +42,7 @@
   	  try {
         	$this->db->ExecuteQuery(self::SQL('drop table user'));
         	$this->db->ExecuteQuery(self::SQL('create table userlogin'));
-        	$this->db->ExecuteQuery(self::SQL('insert into user'), array('root', 'The Administrator', 'root@dbwebb.se', 'root')););
+        	$this->db->ExecuteQuery(self::SQL('insert into user'), array('root', 'The Administrator', 'root@dbwebb.se', 'root'));
         	$this->session->AddMessage('notice', 'Successfully created the database table and created a default admin user as root:root.');
         } catch(Exception$e) {
           die("$e<br/>Failed to open database: " . $this->config['database'][0]['dsn']);
