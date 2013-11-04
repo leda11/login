@@ -7,17 +7,41 @@
 /**
 * Create a url by prepending the base_url.
 */
-function base_url($url) {
+function base_url($url=null) {
   return CHandy::Instance()->request->base_url . trim($url, '/');
 }
 //-----------------------------------------------------------------------------
+/**
+* Create a url to an internal resource.
+* new in user mom04.1
+* @param string the whole url or the controller. Leave empty for current controller.
+* @param string the method when specifying controller as first argument, else leave empty.
+* @param string the extra arguments to the method, leave empty if not using method.
+*/
 
+function create_url($urlOrController=null, $method=null, $arguments=null) {
+  return ChANDY::Instance()->request->CreateUrl($urlOrController, $method, $arguments);
+}
+
+//-----------------------------------------------------------------------------
+
+/**
+* Prepend the theme_url, which is the url to the current theme directory.
+*/
+
+	function theme_url($url) {
+		$HA = ChANADY::Instance();
+		return "{$HA->request->base_url}themes/{$ly->config['theme']['name']}/{$url}";
+	}
+//-----------------------------------------------------------------------------  
+  
 /**
 * Return the current url.
 */
-function current_url() {
-  return CHandy::Instance()->request->current_url;
-}    
+
+	function current_url() {
+		return CHandy::Instance()->request->current_url;
+	}    
  
 //-----------------------------------------------------------------------------    
 

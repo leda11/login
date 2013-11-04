@@ -11,8 +11,8 @@
  	 /**
    * Constructor
    */
-  public function __construct() {
-    parent::__construct();
+  public function __construct($ha=null) {
+    parent::__construct($ha);//uppdaHandyinstancen.-> CObject
   }
 
 // ----------------------------------------------------------------------------------  
@@ -93,6 +93,37 @@
         }
         return ($user != null);
       }
+      
+ /** mom04 del3
+* Login by autenticate the user and password. Store user information in session if success.
+*
+* @param string $akronymOrEmail the emailadress or user akronym.
+* @param string $password the password that should match the akronym or emailadress.
+* @returns booelan true if match else false.
+*/
+/*  public function Login($akronymOrEmail, $password) {
+    $user = $this->db->ExecuteSelectQueryAndFetchAll(self::SQL('check user password'), array($password, $akronymOrEmail, $akronymOrEmail));
+    $user = (isset($user[0])) ? $user[0] : null;
+    unset($user['password']);
+    if($user) {
+      $user['groups'] = $this->db->ExecuteSelectQueryAndFetchAll(self::SQL('get group memberships'), array($user['id']));
+      //ny del mom04 del3
+      foreach($user['groups'] as $val) {
+        if($val['id'] == 1) {
+          $user['hasRoleAdmin'] = true;
+        }
+        if($val['id'] == 2) {
+          $user['hasRoleUser'] = true;
+        }
+      }
+      $this->session->SetAuthenticatedUser($user);
+      $this->AddMessage('success', "Welcome '{$user['name']}'.");
+    } else {
+      $this->AddMessage('notice', "Could not login, user does not exists or password did not match.");
+    }
+    return ($user != null);
+  }
+  */
 //----------------------------------------------------------------------------------	
  /**
    * Does the session contain an authenticated user?

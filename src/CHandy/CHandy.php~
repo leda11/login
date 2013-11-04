@@ -17,16 +17,26 @@ class CHandy implements ISingleton {
       $ha = &$this;
       require(HANDY_SITE_PATH.'/config.php');
       
+     // Create a container for all views and theme data
+     $this->views = new CViewContainer();
+     
+     // create data base 
+      if(isset($this->config['database'][0]['dsn'])) {
+        $this->db = new CMDatabase($this->config['database'][0]['dsn']);
+     }
+     
       //Start Session
       session_name($this->config['session_name']);
       session_start();
+      $this->session = new CSession($this->config['session_key']);
+      $this->session->PopulateFromSession();
   }
    
 //..............................................................................
    
    /**
     * Singleton pattern. Get the instance of the latest created object or create a new one.
-    * @return CLydia The instance of this class.
+    * @return CHandy The instance of this class.
     */
    public static function Instance() {
       if(self::$instance == null) {
@@ -115,8 +125,10 @@ class CHandy implements ISingleton {
     }
 
     // Extract $ha->data to own variables and handover to the template file
-    extract($this->data);     
-    include("{$themePath}/default.tpl.php");
-  }
+    extract($this->data);
+    extract($this->views->GetData());   
+    include("{$themePath}/default.tpl.php");    
   
+  }
+       
 }

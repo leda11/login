@@ -20,7 +20,7 @@ function base_url($url=null) {
 */
 
 function create_url($urlOrController=null, $method=null, $arguments=null) {
-  return ChANDY::Instance()->request->CreateUrl($urlOrController, $method, $arguments);
+  return CHandy::Instance()->request->CreateUrl($urlOrController, $method, $arguments);
 }
 
 //-----------------------------------------------------------------------------
@@ -30,8 +30,8 @@ function create_url($urlOrController=null, $method=null, $arguments=null) {
 */
 
 	function theme_url($url) {
-		$HA = ChANADY::Instance();
-		return "{$HA->request->base_url}themes/{$ly->config['theme']['name']}/{$url}";
+		$HA = CHandy::Instance();
+		return "{$ha->request->base_url}themes/{$ly->config['theme']['name']}/{$url}";
 	}
 //-----------------------------------------------------------------------------  
   

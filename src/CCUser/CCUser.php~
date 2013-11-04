@@ -2,11 +2,11 @@
     /**
     * A user controller  to manage login and view edit the user profile.
     *
-    * @package HandyCore
+    * @package LydiaCore
     */
-    class CCUser extends CObject implements IController  {
+    class CCUser extends CObject implements IController {
 
-      private $userModel;// mom04 del3
+      private $userModel;
      
 
       /**
@@ -14,7 +14,7 @@
        */
       public function __construct() {
         parent::__construct();
-        $this->userModel = new CMUser();// bortkommenterar i mos mom04 del3
+        $this->userModel = new CMUser();
       }
 
 
@@ -22,25 +22,13 @@
        * Show profile information of the user.
        */
       public function Index() {
-        $this->views->SetTitle('User Profile');//changed title mom4 del3
+        $this->views->SetTitle('User Profile');
         $this->views->AddInclude(__DIR__ . '/index.tpl.php', array(
           'is_authenticated'=>$this->userModel->IsAuthenticated(),
           'user'=>$this->userModel->GetUserProfile(),
         ));
       }
      
-/**
-* View and edit user profile. MOs mom4 del3
-*/
-/*  public function Profile() {
-    $this->views->SetTitle('User Profile');
-    $this->views->AddInclude(__DIR__ . '/profile.tpl.php', array(
-      'is_authenticated'=>$this->user->IsAuthenticated(),
-      'user'=>$this->user->GetProfile(),
-    ));
-  }
- */ 
-  
 
       /**
        * Authenticate and login a user.
@@ -49,19 +37,8 @@
         $this->userModel->Login($akronymOrEmail, $password);
         $this->RedirectToController();
       }
- /**
-* Authenticate and login a user. MOM04 del3
-*/
-/*  public function Login($akronymOrEmail=null, $password=null) {
-    if($akronymOrEmail && $password) {
-      $this->user->Login($akronymOrEmail, $password);
-      $this->RedirectToController('profile');
-    }
-    $this->views->SetTitle('Login');
-    $this->views->AddInclude(__DIR__ . '/login.tpl.php');
-  }
-      
-*/
+     
+
       /**
        * Logout a user.
        */

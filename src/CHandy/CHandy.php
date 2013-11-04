@@ -8,7 +8,17 @@
 class CHandy implements ISingleton {
 
    private static $instance = null;
-
+   // all new
+/*   
+   public $config = array();
+   public $request;
+   public $data;
+   public $db;
+   public $views;
+   public $session;
+   public $user;
+   //public $timer = array();
+*/
    /**
     * Constructor
     */
@@ -17,7 +27,16 @@ class CHandy implements ISingleton {
       $ha = &$this;
       require(HANDY_SITE_PATH.'/config.php');
       
-     // Create a container for all views and theme data
+     //Start Session
+      session_name($this->config['session_name']);
+      session_start();
+      $this->session = new CSession($this->config['session_key']);
+      $this->session->PopulateFromSession();
+      
+      //Set default date/time-zone
+      //date_default_timezone_set($this->config['timezone']);
+      
+      // Create a container for all views and theme data
      $this->views = new CViewContainer();
      
      // create data base 
@@ -25,11 +44,10 @@ class CHandy implements ISingleton {
         $this->db = new CMDatabase($this->config['database'][0]['dsn']);
      }
      
-      //Start Session
-      session_name($this->config['session_name']);
-      session_start();
-      $this->session = new CSession($this->config['session_key']);
-      $this->session->PopulateFromSession();
+     // Create a object for the user
+     $this->user = new CMUser($this);
+    
+      
   }
    
 //..............................................................................

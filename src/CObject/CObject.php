@@ -12,21 +12,24 @@ class CObject {
    public $db;
    public $views;
    public $session;
-  // public $model:
+   public $user;
    
    /**
     * Constructor
     */
-   protected function __construct() {
-    $ha = CHandy::Instance();
+   protected function __construct($ha=null) {//nytt konstruktorargument
+   	if(!$ha) {
+   	   $ha = CHandy::Instance();
+   	}
     $this->config   = &$ha->config;
     $this->request  = &$ha->request;
     $this->data     = &$ha->data;
     $this->db 		= &$ha->db;
     $this->views 	= &$ha->views;
-    $this->session	=&$ha->session;
-   // $this->model = &$ha->model;
+    $this->session	= &$ha->session;
+    $this->user     = &$ha->user;//uppdaterat
   }
+  
 /**
     * Redirect to another url and store the session
     * called from CGuestbook->handler()
