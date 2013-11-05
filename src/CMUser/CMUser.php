@@ -76,6 +76,7 @@
       /**
        * Login by autenticate the user and password. Store user information in session if success.
        * added query about group belongin fo authenticated user.
+       * new in loin_menu - 
        * @param string $akronymOrEmail the emailadress or user akronym.
        * @param string $password the password that should match the akronym or emailadress.
        * @returns booelan true if match else false.
@@ -86,6 +87,16 @@
         unset($user['password']);
         if($user) {
           $user['groups'] = $this->db->ExecuteSelectQueryAndFetchAll(self::SQL('get group memberships'), array($user['id']));
+          //ny part login-menu -kolla om admin eller vanlig user
+          foreach($user['groups'] as $val) {
+            if($val['id'] == 1) {
+              $user['hasRoleAdmin'] = true;
+            }
+            if($val['id'] == 2) {
+              $user['hasRoleUser'] = true;
+            }
+          }
+          //
           $this->session->SetAuthenticatedUser($user);
           $this->session->AddMessage('success', "Welcome '{$user['name']}'.");
         } else {
@@ -93,37 +104,7 @@
         }
         return ($user != null);
       }
-      
- /** mom04 del3
-* Login by autenticate the user and password. Store user information in session if success.
-*
-* @param string $akronymOrEmail the emailadress or user akronym.
-* @param string $password the password that should match the akronym or emailadress.
-* @returns booelan true if match else false.
-*/
-/*  public function Login($akronymOrEmail, $password) {
-    $user = $this->db->ExecuteSelectQueryAndFetchAll(self::SQL('check user password'), array($password, $akronymOrEmail, $akronymOrEmail));
-    $user = (isset($user[0])) ? $user[0] : null;
-    unset($user['password']);
-    if($user) {
-      $user['groups'] = $this->db->ExecuteSelectQueryAndFetchAll(self::SQL('get group memberships'), array($user['id']));
-      //ny del mom04 del3
-      foreach($user['groups'] as $val) {
-        if($val['id'] == 1) {
-          $user['hasRoleAdmin'] = true;
-        }
-        if($val['id'] == 2) {
-          $user['hasRoleUser'] = true;
-        }
-      }
-      $this->session->SetAuthenticatedUser($user);
-      $this->AddMessage('success', "Welcome '{$user['name']}'.");
-    } else {
-      $this->AddMessage('notice', "Could not login, user does not exists or password did not match.");
-    }
-    return ($user != null);
-  }
-  */
+
 //----------------------------------------------------------------------------------	
  /**
    * Does the session contain an authenticated user?
@@ -152,40 +133,37 @@
     $this->session->UnsetAuthenticatedUser();
     $this->session->AddMessage('success', "You have logged out.");
   }
-//----------------------------------------------------------------------------------	
-
-  /**
-   * Add a new entry to the guestbook and save to database.
-   */
-  public function Add($entry) {
-  	  $this->db->ExecuteQuery(self::SQL('insert into guestbook'), array($entry));
-      	  $this->session->AddMessage('success', 'The message is now added to the database.');
-        if($this->db->rowCount() != 1) {
-          echo 'Failed to insert new guestbook item into database.';
-        }
-      }
  // ----------------------------------------------------------------------------------
-     
-  /**
-   * Delete all entries from the guestbook and database.
-   */
-  public function DeleteAll() {
-         $this->db->ExecuteQuery(self::SQL('delete from guestbook'));
-         $this->session->AddMessage('info', 'The database is now emptied from messages. ');
-      }
+ 	  
+        /**
+       * Get the user acronym. ny för login meny momentet i MOM04
+       *
+       * @returns string with user acronym or null
+       */
+      public function GetAcronym() {
+        $profile = $this->GetProfile();
+        return isset($profile['acronym']) ? $profile['acronym'] : null;
+      }	
  // ----------------------------------------------------------------------------------
 
-  /**
-   * Read all entries from the guestbook & database.
-   */
-  public function ReadAll() {
-	try {
-          $this->db->SetAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);          
-          return $this->db->ExecuteSelectQueryAndFetchAll(self::SQL('select * from guestbook'));
-        } catch(Exception $e) {
-          return array();   
-        }
-      }  	  
-  	  
-  	  
+      /**
+       * Does the user have the admin role? ny för login meny momentet i MOM04
+       *
+       * @returns boolen true or false.
+       */
+      public function IsAdministrator() {
+        $profile = $this->GetProfile();
+        return isset($profile['hasRoleAdmin']) ? $profile['hasRoleAdmin'] : null;
+      }
+   // ----------------------------------------------------------------------------------
+   	/**
+  	* Get profile information on user.
+  	*
+  	* @returns array with user profile or null if anonymous user.
+  	*/
+      function GetProfile(){
+      	  return $this->session->GetAuthenticatedUser();      	  
+      }
+      
+
   }

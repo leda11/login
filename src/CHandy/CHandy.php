@@ -9,7 +9,7 @@ class CHandy implements ISingleton {
 
    private static $instance = null;
    // all new
-/*   
+  
    public $config = array();
    public $request;
    public $data;
@@ -18,7 +18,7 @@ class CHandy implements ISingleton {
    public $session;
    public $user;
    //public $timer = array();
-*/
+
    /**
     * Constructor
     */

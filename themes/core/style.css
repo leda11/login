@@ -33,6 +33,11 @@ body{
 	font: 0.8em Verdana, Arial, Helvetica, sans-serif;
 }
 
+/**
+* Login menu
+*/
+#login-menu{float:right;font-size:smaller;}
+
 #textInput {
 	width: 500px;
 	height: 100px;

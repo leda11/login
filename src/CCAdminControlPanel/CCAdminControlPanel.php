@@ -1,20 +1,17 @@
-    <?php
+   <?php
     /**
     * A user controller  to manage login and view edit the user profile.
     *
     * @package HandyCore
     */
-    class CCUser extends CObject implements IController  {
-
-      //private $userModel;// mom04 del3
-     
+    class CCAdminControlPanel extends CObject implements IController  {
 
       /**
        * Constructor
        */
       public function __construct() {
         parent::__construct();
-       // $this->userModel = new CMUser();// bortkommenterar i mos mom04 del3
+       
       }
 
 //-----------------------------------------------------------------------------
@@ -22,7 +19,7 @@
        * Show profile information of the user.
        */
       public function Index() {
-        $this->views->SetTitle('User Profile');//changed title mom4 del3
+        $this->views->SetTitle('Admin Control Pannel');
         $this->views->AddInclude(__DIR__ . '/index.tpl.php', array(
           'is_authenticated'=>$this->user->IsAuthenticated(), // vad händer här?
           'user'=>$this->user->GetUserProfile(),
@@ -33,7 +30,7 @@
 * View and edit user profile. MOs mom4 del3. direct to a profile site
 */
   public function Profile() {
-    $this->views->SetTitle('User Profile');
+    $this->views->SetTitle('Admin Control Pannel');
     $this->views->AddInclude(__DIR__ . '/profile.tpl.php', array(
       'is_authenticated'=>$this->user->IsAuthenticated(),
       'user'=>$this->user->GetProfile(),

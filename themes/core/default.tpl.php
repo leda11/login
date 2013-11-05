@@ -9,7 +9,10 @@
 <body>
 <div id='wrap-header'>
   <div id='header'>
-    <div id='banner'>
+   <div id='login-menu'>
+   	<?=login_menu()?>
+   </div>
+   <div id='banner'>
      	<p class='site-title'><?=$header?></p>
      	<p class='site-slogan'><?=$slogan?></p>
     </div>

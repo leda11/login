@@ -135,7 +135,7 @@ class CRequest {
     $method = empty($method) ? null : '/' . trim($method, '/');
     $arguments = empty($arguments) ? null : '/' . trim($arguments, '/');
     return $prepend . rtrim("$url$method$arguments", '/');
-    //return $prepend . rtrim("$url/$method", '/');
+    
   }
 
 //----------------------------------------------------------------------------  

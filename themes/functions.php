@@ -4,6 +4,29 @@
 * This file is included right before the themes own functions.php
 */
 
+function login_menu(){
+	$ha = CHandy::instance();
+	if( $ha->user->IsAuthenticated()){
+		//$ha->user->GetAcronym() ;
+		//skapa en länk som triggar en utloggning -lagra i en variabel
+		$logstatus = "<a href='" . create_url('user/profile') . "'>" . $ha->user->GetAcronym() . "</a> ";
+		//$logstatus .= "<a href='". create_url('user/profile') . "'>Logout </a>";
+		
+		if($ha->user->IsAdministrator()){
+			$logstatus.= "<a href='" . create_url('acp') . "'>acp</a> ";	
+		}	
+		$logstatus .= "Admin: Du är inloggad <a href='" . create_url('user/logout') . "'>Logout</a>" ;
+		
+	}else{
+		$logstatus = "Du är utloggad <a href='" . create_url('user/login') . "'>login</a> ";
+
+	}
+	return $logstatus;
+}
+
+ 
+//-----------------------------------------------------------------------------
+
 /**
 * Create a url by prepending the base_url.
 */
@@ -30,8 +53,8 @@ function create_url($urlOrController=null, $method=null, $arguments=null) {
 */
 
 	function theme_url($url) {
-		$HA = CHandy::Instance();
-		return "{$ha->request->base_url}themes/{$ly->config['theme']['name']}/{$url}";
+		$Ha = CHandy::Instance();
+		return "{$ha->request->base_url}themes/{$ha->config['theme']['name']}/{$url}";
 	}
 //-----------------------------------------------------------------------------  
   

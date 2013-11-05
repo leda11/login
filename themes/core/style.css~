@@ -11,6 +11,9 @@ body{
    font: 1em Verdana, Arial, Helvetica, sans-serif;
 }
 
+#wrap-header {}
+#wrap-main {}
+
 #header,
 #main,
 #footer {
@@ -21,24 +24,63 @@ body{
 #header{
 	background-color:#E592B1;
 	color:#fff;
+	min-height:80px;
 } 
 #main {background-color:#FBE4F0;}
+
 #footer{
 	background-color:#EEDDF8;
 	font: 0.8em Verdana, Arial, Helvetica, sans-serif;
 }
 
 #textInput {
-	width: 400px;
+	width: 500px;
 	height: 100px;
 }
 
 #comment{
 	background-color:#f6f6f6;
 	border:1px dotted #ccc;
-	margin-bottom:1em;
-	padding:0.5em;
+	margin-bottom:0.8em;
+	padding:0.4em;
 	font-size: 10px;
 }
-	
+
+/**
+* Banner
+*/
+#banner {display:table;margin-bottom:10px;}
+
+.site-title,
+.site-slogan {display:table-cell;width:inherit;vertical-align:middle;text-align:left;}
+
+.site-title,
+.site-slogan {font-family:Tangerine,serif;line-height:1;padding-left:20px;color:#fff;
+  text-shadow:#ccc 2px -2px 2px;}
+.site-title {font-size:4em;font-weight:bold;}
+.site-slogan {font-size:1.5em;}
+
+/**
+*Fonts -------------------------------------------------------------------------
+*/
+@import url(http://fonts.googleapis.com/css?family=UnifrakturCook:bold);
+.font1{font-family:Tangerine,serif;font-size:48px;}
+.heading {font: Verdana;font-size: 48px;}
+
+
+/**
+* User feedback message wrappers.------------------------------------------------
+*/
+.error, .alert, .warning, .notice, .success, .info {
+padding: 0.8em; margin-bottom: 1em; border: 2px dotted #E592B1; }
+                                       
+.error, .alert { background: #E552E0; color: #fff;  }
+.notice, .warning { background: #CAE; color: #fff;  }
+.success { background:#E6D7EA ; color: #fff;  }
+.info { background: #DBBAE2; color: #fff;  }
+.error a, .alert a { color: #8a1f11; }
+.notice a, .warning a { color: #514721; }
+.success a { color: #264409; }
+.info a { color: #fff; border-color: #B8D8BA;}
+
 	
