@@ -69,7 +69,7 @@ EOD;
 * Create a method that shows the menu, same for all methods
 */
   private function Menu() {
-    $ha = CHandy::Instance();
+    //$ha = CHandy::Instance();
     $menu = array('developer', 'developer/index', 'developer/links', 'developer/display-object');
     
     $html = null;
