@@ -57,7 +57,7 @@
         * Add a view as file to be included and optional variables.
         *
         * @param $file string path to the file to be included.
-        * @param vars array containing the variables that should be avilable for the included file.
+        * @param vars array containing the variables that should be available for the included file.
         */
         
        public function AddInclude($file, $variables=array()) {

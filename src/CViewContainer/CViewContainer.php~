@@ -3,6 +3,13 @@
     * A container to hold a bunch of views. 
     * will be initiated in CHandy's contreuctor
     *
+    * Methods
+    * GetData()
+    * SetTitle($value)
+    * SetVariable($key, $value)
+    * AddInclude($file, $variables=array())
+    * Render()
+    *
     * @package HandyCore
     */
     class CViewContainer {

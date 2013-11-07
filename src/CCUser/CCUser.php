@@ -6,9 +6,7 @@
     */
     class CCUser extends CObject implements IController  {
 
-      //private $userModel;// mom04 del3
-     
-
+      
       /**
        * Constructor
        */
@@ -22,15 +20,15 @@
        * Show profile information of the user.
        */
       public function Index() {
-        $this->views->SetTitle('User Profile');//changed title mom4 del3
+        $this->views->SetTitle('User Controller');
         $this->views->AddInclude(__DIR__ . '/index.tpl.php', array(
-          'is_authenticated'=>$this->user->IsAuthenticated(), // vad händer här?
+          'is_authenticated'=>$this->user->IsAuthenticated(), 
           'user'=>$this->user->GetUserProfile(),
         ));
       }
 //-----------------------------------------------------------------------------     
 /**
-* View and edit user profile. MOs mom4 del3. direct to a profile site
+* View and edit user profile. MOs mom4 del 3. direct to a profile site
 */
   public function Profile() {
     $this->views->SetTitle('User Profile');
@@ -39,34 +37,37 @@
       'user'=>$this->user->GetProfile(),
     ));
   }
-//-----------------------------------------------------------------------------
-  
 
-      /**
-       * Authenticate and login a user.
-       */
-/*      public function Login($akronymOrEmail=null, $password=null) {
-        $this->userModel->Login($akronymOrEmail, $password);
-        $this->RedirectToController();// går till index sidan
-      }
-*/
 //-----------------------------------------------------------------------------
  /**
-* Authenticate and login a user. MOM04 del3 anv the theme
-* If user identified send ro profile site.
+* Authenticate and login a user. 
 * Add login template
 */
-  public function Login($akronymOrEmail=null, $password=null) {
-    if($akronymOrEmail && $password) {
-      $this->user->Login($akronymOrEmail, $password);
-      $this->RedirectToController('profile');
-    }
-    $this->views->SetTitle('Login');
-    $this->views->AddInclude(__DIR__ . '/login.tpl.php');
-  }
-     
-
+      public function Login() {
+        $form = new CForm();
+        // AddElement($key, $element)
+        $form->AddElement('acronym', array('label'=>'Acronym or email:', 'type'=>'text'));
+        $form->AddElement('password', array('label'=>'Password:', 'type'=>'password'));
+        $form->AddElement('doLogin', array('value'=>'Login', 'type'=>'submit', 'callback'=>array($this, 'DoLogin')));
+        $form->CheckIfSubmitted();
+        $this->views->SetTitle('Login');
+        $this->views->AddInclude(__DIR__ . '/login.tpl.php', array('login_form'=>$form->GetHTML()));     
+      }
 //-----------------------------------------------------------------------------
+      /**
+       * Perform a login of the user as callback on a submitted form.
+       * GetValue() can be foound in CForm
+       */
+      public function DoLogin($form) {
+        if($this->user->Login($form->GetValue('acronym'), $form->GetValue('password'))) {
+          $this->RedirectToController('profile');
+        } else {
+          $this->RedirectToController('login');     
+        }
+      }
+      
+ //-----------------------------------------------------------------------------
+     
       /**
        * Logout a user.
        */
