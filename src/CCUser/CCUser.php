@@ -19,13 +19,15 @@
       /**
        * Show profile information of the user.
        */
-      public function Index() {
+       public function Index() {
         $this->views->SetTitle('User Controller');
         $this->views->AddInclude(__DIR__ . '/index.tpl.php', array(
           'is_authenticated'=>$this->user->IsAuthenticated(), 
-          'user'=>$this->user->GetUserProfile(),
+          'user'=>$this->user->GetProfile(),
         ));
       }
+
+
 //-----------------------------------------------------------------------------     
 /**
 * View and edit user profile. MOs mom4 del 3. direct to a profile site
@@ -48,11 +50,13 @@
         // AddElement($key, $element)
         $form->AddElement('acronym', array('label'=>'Acronym or email:', 'type'=>'text'));
         $form->AddElement('password', array('label'=>'Password:', 'type'=>'password'));
-        $form->AddElement('doLogin', array('value'=>'Login', 'type'=>'submit', 'callback'=>array($this, 'DoLogin')));
-        $form->CheckIfSubmitted();
+        $form->AddElement('doLogin', array('value'=>'Login', 'type'=>'submit', 'callback'=>array($this, 'DoLogin')));        
+        $form->CheckIfSubmitted();      // MOS har inte med denna i userlogin		
+        
         $this->views->SetTitle('Login');
         $this->views->AddInclude(__DIR__ . '/login.tpl.php', array('login_form'=>$form->GetHTML()));     
-      }
+
+        }
 //-----------------------------------------------------------------------------
       /**
        * Perform a login of the user as callback on a submitted form.

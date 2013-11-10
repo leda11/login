@@ -14,9 +14,9 @@ class CForm {
   public $form; // array with settings for the form
   public $elements; // array with all form elements
 	
-	public function  __constuct($form_array, $elements_array){
-		$this->$form = $form_array; //array with settings for the form
-		$this->elements= $elements_array; // array with the form elements 
+	public function  __constuct($form=array(), $elements=array()){
+		$this->$form = $form; //array with settings for the form
+		$this->elements= $elements; // array with the form elements 
 	}
 	
 //-----------------------------------------------------------------------------	

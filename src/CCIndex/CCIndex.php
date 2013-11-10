@@ -26,6 +26,7 @@ class CCIndex extends CObject implements IController {
        */
       private function Menu() {   
         $items = array();
+        
         foreach($this->config['controllers'] as $key => $val) {
           if($val['enabled']) {
             $rc = new ReflectionClass($val['class']);

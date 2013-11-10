@@ -32,29 +32,51 @@ class CRequest {
     // 3. ToDo - index.php?q=/controller/method/arg1/arg2/arg3
     $requestUri  = $_SERVER['REQUEST_URI']; //ny 05
     $scriptPart = $scriptName  = $_SERVER['SCRIPT_NAME']; //ny 05
-    
+
     // (06)  Check if url is in format controller/method/arg1/arg2/arg3
     if(substr_compare($requestUri, $scriptName, 0, strlen($scriptName))) {
       $scriptPart = dirname($scriptName);
     }
+    //$query = trim(substr($requestUri, strlen(rtrim($scriptPart, '/'))), '/');  
     
-    $query = trim(substr($requestUri, strlen(rtrim($scriptPart, '/'))), '/');  
+    
     //NY mom03 session - query after base_url, except if optional querystring
-    $pos = strcspn($query, '?');
+  /*  $pos = strpos($query, '?');// felstavat på strpos 9/11 lagt till en med MOS namn
     if($pos){
     	$query = substr($query, 0 , $pos);
+    }*/
+    // 9/11 
+    // Compare REQUEST_URI and SCRIPT_NAME as long they match, leave the rest as current request.
+    $i=0;
+    $len = min(strlen($requestUri), strlen($scriptName));
+    while($i<$len && $requestUri[$i] == $scriptName[$i]) {
+      $i++;
     }
+    $request = trim(substr($requestUri, $i), '/');
     
     // Check if this looks like a querystring approach link
-    if(substr($query, 0, 1) === '?' && isset($_GET['q'])) {
+  /*  if(substr($query, 0, 1) === '?' && isset($_GET['q'])) {
       $query = trim($_GET['q']);
     }
+    */
     //LD eget kanske inte behövs
     /*if(substr($query, 0, 1) === '?' && isset($_POST['q'])) {
       $query = trim($_POST['q']);
     }
     */
-    $splits = explode('/', $query);
+
+    //9/11
+    // Remove the ?-part from the query when analysing controller/metod/arg1/arg2
+    $queryPos = strpos($request, '?');
+    if($queryPos !== false) {
+      $request = substr($request, 0, $queryPos);
+    }
+    // 9/11 test tillaggt
+    // Check if request is empty and querystring link is set 
+    if(empty($request) && isset($_GET['q'])) {
+      $request = trim($_GET['q']);
+    }
+    $splits = explode('/', $request);
         
    // $query =substr($request_uri, strlen(rtrim(dirname($scriptName), '/')));//ändrad (05)
     // 05 05 $splits = explode('/', trim($query, '/'));
@@ -75,7 +97,7 @@ class CRequest {
     $this->current_url  = $currentUrl;
     $this->request_uri = $requestUri; // (06)
     $this->script_name = $scriptName;
-    $this->query         = $query;
+    $this->request         = $request;
     $this->splits         = $splits;
     $this->controller     = $controller;
     $this->method         = $method;
@@ -107,14 +129,15 @@ class CRequest {
   */
   public function CreateUrl($url=null, $method=null, $arguments=null) {
     // If fully qualified just leave it.
-                if(!empty($url) && (strpos($url, '://') || $url[0] == '/')) {
-                        $url;
-                }
+    
+    if(!empty($url) && (strpos($url, '://') || $url[0] == '/')) {
+        $url;
+       }
     
     // Get current controller if empty and method choosen. arguments tillagd user 2.1
-    if(empty($url) && !empty($method) || !empty($arguments)) {
+    if(empty($url) && (!empty($method) || !empty($arguments)) ) {
       $url = $this->controller;
-    }
+      }
     
     // Get current method if empty and arguments choosen-nytt user.1
     if(empty($method) && !empty($arguments)) {

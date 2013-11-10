@@ -12,7 +12,7 @@ function login_menu(){
 		if($ha->user->IsAdministrator()){
 			$logstatus.= "<a href='" . create_url('acp') . "'>acp</a> ";	
 		}	
-		$logstatus .= "Admin: Du är inloggad <a href='" . create_url('user/logout') . "'>Logout</a>" ;
+		$logstatus .= "Du är inloggad <a href='" . create_url('user/logout') . "'>Logout</a>" ;
 		
 	}else{
 		$logstatus = "Logga in <a href='" . create_url('user/login') . "'>login</a> ";

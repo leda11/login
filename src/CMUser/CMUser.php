@@ -115,16 +115,6 @@
     return ($this->session->GetAuthenticatedUser() != false);
   }
 
-
-//----------------------------------------------------------------------------------	
-/**
-   * Get profile information on user.(saved in the session)
-   *
-   * @returns array with user profile or null if anonymous user.
-   */
-  public function GetUserProfile() {
-    return $this->session->GetAuthenticatedUser();
-  }
 //----------------------------------------------------------------------------------	
   /**
    * Logout.
