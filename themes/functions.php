@@ -7,8 +7,11 @@
 function login_menu(){
 	$ha = CHandy::instance();
 	if( $ha->user->IsAuthenticated()){
+		// skapa gravatar
+	
 		//skapa en länk som triggar en utloggning -lagra i en variabel
-		$logstatus = "<a href='" . create_url('user/profile') . "'>" . $ha->user->GetAcronym() . "</a> ";
+		$logstatus = "<a href='" . create_url('user/profile') . "'><img class='gravatar' src='" . get_gravatar(20) . "' alt=''> " . $ha->user['acronym'] . "</a> ";
+		
 		if($ha->user->IsAdministrator()){
 			$logstatus.= "<a href='" . create_url('acp') . "'>acp</a> ";	
 		}	
@@ -130,4 +133,12 @@ function create_url($urlOrController=null, $method=null, $arguments=null) {
         }
       }
       return $html;
+    }
+    
+//--------------------------------------------------------------------------
+        /**
+    * Get a gravatar based on the user's email.
+    */
+    function get_gravatar($size=null) {
+      return 'http://www.gravatar.com/avatar/' . md5(strtolower(trim(CHandy::Instance()->user['email']))) . '.jpg?' . ($size ? "s=$size" : null);
     }
