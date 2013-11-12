@@ -1,5 +1,7 @@
 <h1>User Controller Index</h1>
-<p>Added login menu (upper right corner)and profile page.</p>
+<p>A controller that handles the user actions.
+Added login menu (upper right corner)and profile page.<br/>
+Handles connect to database, login, logout, view and edit of profile.user </p>
 <ul>
   <li><a href='<?=create_url('user/init')?>'>Init database, create tables and create default admin user</a>
 </ul>

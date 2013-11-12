@@ -24,6 +24,9 @@ class CHandy implements ISingleton {
     * Constructor
     */
    protected function __construct() {
+   	  //time the page generation. added 11/11
+   	   $this->timer['first'] = microtime(true); 
+   	   
       // include the site specific config.php and create a ref to $ha to be used by site/config.php
       $ha = &$this;
       require(HANDY_SITE_PATH.'/config.php');
@@ -70,12 +73,14 @@ class CHandy implements ISingleton {
     * Frontcontroller, check url and route to controllers.
     */
   public function FrontControllerRoute() {
-    //$this->data['debug']  = "REQUEST_URI - {$_SERVER['REQUEST_URI']}\n";//9/11 test
-    //$this->data['debug'] .= "SCRIPT_NAME - {$_SERVER['SCRIPT_NAME']}\n";
+
      
     // Take current url and divide it in controller, method and parameters
     // part in fixing base_url mom05
     $this->request = new CRequest();
+    //add 11/11 testa sen
+    // $this->request = new CRequest($this->config['url_type']);
+     
     $this->request->Init($this->config['base_url']);
           
     $controller = $this->request->controller;
@@ -105,9 +110,10 @@ class CHandy implements ISingleton {
         if($rc->hasMethod($formattedMethod)) {
           $controllerObj = $rc->newInstance();
           $methodObj = $rc->getMethod($formattedMethod);
-         if($methodObj->isPublic()) {//9/11 la till denn a if-elsesats
+         
+          if($methodObj->isPublic()) {//9/11 la till denn a if-elsesats
             $methodObj->invokeArgs($controllerObj, $arguments);
-         } else {
+          } else {
             die("404. " . get_class() . ' error: Controller method not public.');
           }
         } else {

@@ -58,7 +58,7 @@ $ha->config['language'] = 'en';
 /**
  * Set what to show as debug or developer information in the get_debug() theme helper.
 */
-    $ha->config['debug']['handy'] = true;
+    $ha->config['debug']['handy'] = false;
     $ha->config['debug']['db-num-queries'] = true;
     $ha->config['debug']['db-queries'] = true;
     $ha->config['debug']['session'] = false;

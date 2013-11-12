@@ -25,7 +25,7 @@
      
      
       /**
-       * Set an attribute on the database . Made in construct.
+       * Set an attribute on the database . used in construct.
        */
       public function SetAttribute($attribute, $value) {
         return $this->db->setAttribute($attribute, $value);

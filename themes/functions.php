@@ -80,17 +80,28 @@ function create_url($urlOrController=null, $method=null, $arguments=null) {
     */
     function get_debug() {
       $ha = CHandy::Instance(); 
-      
+      if(empty($ha->config['debug'])) {
+      	  return;
+      }
       $html = null;
       if(isset($ha->config['debug']['db-num-queries']) && $ha->config['debug']['db-num-queries'] && isset($ha->db)) {
       	  $flash = $ha->session->GetFlash('database_numQueries');
       	  $flash = $flash ? "$flash + " : null;
-      	  $html .= "<p>db-num-queries: Database made $flash" . $ha->db->GetNumQueries() . " queries.</p>";
+      	  $html .= "<p>Database (db-num-queries) made $flash" . $ha->db->GetNumQueries() . " queries.</p>";
       	  //$html .= "<p>Database made " . $ha->db->GetNumQueries() . " queries.</p>"; 
       }   	  
-      if(isset($ha->config['debug']['db-queries']) && $ha->config['debug']['db-queries'] && isset($ha->db)) {
-      	  $html .= "<p>db-queries: Database made the following queries.</p><pre>" . implode('<br/><br/>', $ha->db->GetQueries()) . "</pre>";
-      }   
+       if(isset($ha->config['debug']['db-queries']) && $ha->config['debug']['db-queries'] && isset($ha->db)) {
+       	   
+       	   $flash = $ha->session->GetFlash('database_queries');
+       	   $queries = $ha->db->GetQueries();
+       	   if($flash) {
+       	   	   $queries = array_merge($flash, $queries);
+       	   }
+       	$html .= "<p>Database made the following queries.</p><pre>" . implode('<br/><br/>', $queries) . "</pre>";
+       }
+      if(isset($ha->config['debug']['timer']) && $ha->config['debug']['timer']) {
+      	  $html .= "<p>Page was loaded in " . round(microtime(true) - $ha->timer['first'], 5)*1000 . " msecs.</p>";
+      } 
       if(isset($ha->config['debug']['handy']) && $ha->config['debug']['handy']) {
         $html .= "<hr><h3>Debuginformation</h3><p>The content of CHandy:</p><pre>" . htmlent(print_r($ha, true)) . "</pre>";
       }  

@@ -30,7 +30,9 @@
        /**
         * Getters.
         */
-      public function GetData() { return $this->data; }
+      public function GetData() { 
+      	return $this->data; 
+      }
 //------------------------------------------------------------------------------     
      
        /**
@@ -38,8 +40,9 @@
         *
         * @param $value string to be set as title.
         */
+        // added return 12/11
        public function SetTitle($value) {
-         $this->SetVariable('title', $value);
+         return $this->SetVariable('title', $value);
       }
 //------------------------------------------------------------------------------
 
@@ -48,8 +51,10 @@
         *
         * @param $value string to be set as title.
         */
+        // added eturn 12/11
        public function SetVariable($key, $value) {
-         $this->data[$key] = $value;
+          $this->data[$key] = $value;
+          return $this;
       }
 
 //------------------------------------------------------------------------------
@@ -62,11 +67,12 @@
         
        public function AddInclude($file, $variables=array()) {
          $this->views[] = array('type' => 'include', 'file' => $file, 'variables' => $variables);
+         return $this;// new 11/11
       }
 //------------------------------------------------------------------------------
 
        /**
-        * Render all views according to their type. 
+        * Render all views according to their type. 	
         * (anropas från Themes/functions.php i  default.tpl.php)
         */
        public function Render() {

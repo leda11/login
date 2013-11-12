@@ -6,15 +6,42 @@
  * inherit CObject to be able to use $this
  */
  
- class CMUser extends CObject implements IHasSQL{ 
+ class CMUser extends CObject implements IHasSQL, ArrayAccess{ 
  	
+ 	 /**
+ 	 * Properties to handle arrays
+ 	 */
+ 	 public $profile = array();
+   
  	 /**
    * Constructor
    */
   public function __construct($ha=null) {
     parent::__construct($ha);//uppdaHandyinstancen.-> CObject
+    $profile = $this->session->GetAuthenticatedUser();
+    $this->profile = is_null($profile) ? array() : $profile;
+    $this['isAuthenticated'] = is_null($profile) ? false : true;
   }
+// ----------------------------------------------------------------------------------  
 
+  /**
+* Implementing ArrayAccess for $this->profile
+*/
+  public function offsetSet($offset, $value) { 
+  	if (is_null($offset)) { $this->profile[] = $value; 
+  	} else { 
+  		$this->profile[$offset] = $value; 
+  	}
+  }
+  public function offsetExists($offset) { 
+  	return isset($this->profile[$offset]); 
+  }
+  public function offsetUnset($offset) { 
+  	unset($this->profile[$offset]); 
+  }
+  public function offsetGet($offset) { 
+  	return isset($this->profile[$offset]) ? $this->profile[$offset] : null; 
+  }
 // ----------------------------------------------------------------------------------  
       /**
        * Implementing interface IHasSQL. Encapsulate all SQL used by this class.
@@ -26,14 +53,16 @@
           'drop table user'         => "DROP TABLE IF EXISTS User;",
           'drop table group'        => "DROP TABLE IF EXISTS Groups;",
           'drop table user2group'   => "DROP TABLE IF EXISTS User2Groups;",
-          'create table user'  => "CREATE TABLE IF NOT EXISTS User (id INTEGER PRIMARY KEY, acronym TEXT KEY, name TEXT, email TEXT, password TEXT, created DATETIME default (datetime('now')));",
-          'create table group'      => "CREATE TABLE IF NOT EXISTS Groups (id INTEGER PRIMARY KEY, acronym TEXT KEY, name TEXT, created DATETIME default (datetime('now')));",
+          'create table user' 		=> "CREATE TABLE IF NOT EXISTS User (id INTEGER PRIMARY KEY, acronym TEXT KEY, name TEXT, email TEXT, password TEXT, created DATETIME default (datetime('now')), updated DATETIME default NULL);",
+          'create table group' 		=> "CREATE TABLE IF NOT EXISTS Groups (id INTEGER PRIMARY KEY, acronym TEXT KEY, name TEXT, created DATETIME default (datetime('now')), updated DATETIME default NULL);",
           'create table user2group' => "CREATE TABLE IF NOT EXISTS User2Groups (idUser INTEGER, idGroups INTEGER, created DATETIME default (datetime('now')), PRIMARY KEY(idUser, idGroups));",
           'insert into user'        => 'INSERT INTO User (acronym,name,email,password) VALUES (?,?,?,?);',
           'insert into group'       => 'INSERT INTO Groups (acronym,name) VALUES (?,?);',
           'insert into user2group'  => 'INSERT INTO User2Groups (idUser,idGroups) VALUES (?,?);',
           'check user password'     => 'SELECT * FROM User WHERE password=? AND (acronym=? OR email=?);',
           'get group memberships'   => 'SELECT * FROM Groups AS g INNER JOIN User2Groups AS ug ON g.id=ug.idGroups WHERE ug.idUser=?;',
+          'update profile' 			=> "UPDATE User SET name=?, email=?, updated=datetime('now') WHERE id=?;",
+          'update password'		 	=> "UPDATE User SET password=?, updated=datetime('now') WHERE id=?;",
          );
         if(!isset($queries[$key])) {
           throw new Exception("No such SQL query, key '$key' was not found.");
@@ -85,9 +114,11 @@
         $user = $this->db->ExecuteSelectQueryAndFetchAll(self::SQL('check user password'), array($password, $akronymOrEmail, $akronymOrEmail));
         $user = (isset($user[0])) ? $user[0] : null;
         unset($user['password']);
+       
         if($user) {
-          $user['groups'] = $this->db->ExecuteSelectQueryAndFetchAll(self::SQL('get group memberships'), array($user['id']));
-          //ny part login-menu -kolla om admin eller vanlig user
+        	$user['isAuthenticated'] = true;
+        	$user['groups'] = $this->db->ExecuteSelectQueryAndFetchAll(self::SQL('get group memberships'), array($user['id']));
+          	//ny part login-menu -kolla om admin eller vanlig user
           foreach($user['groups'] as $val) {
             if($val['id'] == 1) {
               $user['hasRoleAdmin'] = true;
@@ -96,11 +127,12 @@
               $user['hasRoleUser'] = true;
             }
           }
-          //
-          $this->session->SetAuthenticatedUser($user);
-          $this->session->AddMessage('success', "Welcome '{$user['name']}'.");
-        } else {
-          $this->session->AddMessage('notice', "Could not login, user does not exists or password did not match.");
+          $this->profile = $user;
+          $this->session->SetAuthenticatedUser($this->profile);
+          //$this->session->AddMessage('success', "Welcome '{$user['name']}'.");
+        //} else {
+        //  $this->session->AddMessage('notice', "Could not login, user does not exists or password did not match.");
+        //}
         }
         return ($user != null);
       }
@@ -111,7 +143,8 @@
    *
    * @returns boolen true or false.
    */
-  public function IsAuthenticated() {
+  //borttagen del 6 userprofileform
+	public function IsAuthenticated() {
     return ($this->session->GetAuthenticatedUser() != false);
   }
 
@@ -121,15 +154,39 @@
    */
   public function Logout() {
     $this->session->UnsetAuthenticatedUser();
+    $this->Sprofile = array();// nollsätt profilens innehåll
     $this->session->AddMessage('success', "You have logged out.");
   }
  // ----------------------------------------------------------------------------------
- 	  
+ /**
+* Save user profile to database and update user profile in session.
+*
+* @returns boolean true if success else false. NY för userprofileForm
+*/
+  public function Save() {
+    $this->db->ExecuteQuery(self::SQL('update profile'), array($this['name'], $this['email'], $this['id']));
+    $this->session->SetAuthenticatedUser($this->profile);
+    return $this->db->RowCount() === 1;
+  }
+ //---------------------------------------------------------------------------- 
+  
+  /**
+* Change user password. NY för userprofileForm
+*
+* @param $password string the new password
+* @returns boolean true if success else false.
+*/
+  public function ChangePassword($password) {
+    $this->db->ExecuteQuery(self::SQL('update password'), array($password, $this['id']));
+    return $this->db->RowCount() === 1;
+  }
+  //----------------------------------------------------------------------------
         /**
        * Get the user acronym. ny för login meny momentet i MOM04
        *
        * @returns string with user acronym or null
        */
+       // är inte med i del 6 ta bort sen testa
       public function GetAcronym() {
         $profile = $this->GetProfile();
         return isset($profile['acronym']) ? $profile['acronym'] : null;
@@ -141,6 +198,8 @@
        *
        * @returns boolen true or false.
        */
+              // är inte med i del 6 ta bort sen testa
+
       public function IsAdministrator() {
         $profile = $this->GetProfile();
         return isset($profile['hasRoleAdmin']) ? $profile['hasRoleAdmin'] : null;
@@ -151,6 +210,8 @@
   	*
   	* @returns array with user profile or null if anonymous user.
   	*/
+  	 // är inte med i del 6 ta bort sen testa
+
       function GetProfile(){
       	  return $this->session->GetAuthenticatedUser();      	  
       }

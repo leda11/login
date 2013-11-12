@@ -23,7 +23,13 @@
    		private $data = array();
    		private $flash = null;
 //------------------------------------------------------------------------------
-
+		/**
+         * Constructor
+         */
+        public function __construct($key) {
+        	$this->key = $key;
+       }
+       
     	/**
        * Store values into session.
        * $this->key sätts i konstruktorn och är konfigurerbar via en rad i site/config.php
@@ -52,18 +58,13 @@
 // ------------------------------------------------------------------------------      
 
 	/**
-       * Set flash values, to be remembered one page request
+       * Set  or Get flash values, to be remembered one page request
        * used in CObject->RedirectTo($url)
        */
       public function SetFlash($key, $value) {
         $this->data['flash'][$key] = $value;
       }
-// ------------------------------------------------------------------------------
 
-    
-      /**
-       * Get flash values, if any.
-       */
       public function GetFlash($key) {
         return isset($this->flash[$key]) ? $this->flash[$key] : null;
       }

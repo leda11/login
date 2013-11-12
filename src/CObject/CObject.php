@@ -35,7 +35,7 @@ class CObject {
     * called from CGuestbook->handler()
     */
     protected function RedirectTo($urlOrController=null, $method=null) {//9/11 MOs har 
-    //$ha = CHandy::Instance(); //9/11
+    $ha = CHandy::Instance(); 
     if(isset($ha->config['debug']['db-num-queries']) && $ha->config['debug']['db-num-queries'] && isset($this->db)) {
       $this->session->SetFlash('database_numQueries', $this->db->GetNumQueries());
     }
@@ -81,9 +81,29 @@ class CObject {
          * @param $type string the type of message, for example: notice, info, success, warning, error.
          * @param $message string the message.
          */
-         protected function AddMessage($type, $message) {
+        /* protected function AddMessage($type, $message) {
          	 $this->session->AddMessage($type, $message);
          }
+         */
+               /**
+         * Save a message in the session. Uses $this->session->AddMessage()
+         *
+* @param $type string the type of message, for example: notice, info, success, warning, error.
+* @param $message string the message.
+* @param $alternative string the message if the $type is set to false, defaults to null.
+*/
+//new 12/11
+  protected function AddMessage($type, $message, $alternative=null) {
+    if($type === false) {
+      $type = 'error';
+      $message = $alternative;
+    } else if($type === true) {
+      $type = 'success';
+    }
+    $this->session->AddMessage($type, $message);
+  }
+
+
  //-----------------------------------------------------------------------------
         
        /**

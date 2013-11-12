@@ -1,5 +1,5 @@
  <h1>Login</h1>
- <div>
+
  <?=$login_form?>
  
  
