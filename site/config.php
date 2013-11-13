@@ -40,6 +40,12 @@ $ha->config['session_key']  = 'handy';
 $ha->config['database'][0]['dsn'] = 'sqlite:' . HANDY_SITE_PATH . '/data/.ht.sqlite';
 
 /**
+* How to hash password of new users, choose from: plain, md5salt, md5, sha1salt, sha1.
+*/
+// choose between md5 plain, md5, md5salt, sha1, sha1salt
+$ha->config['hashing_algorithm'] = 'sha1salt';
+    
+/**
 * Define server timezone
 */
 $ha->config['timezone'] = 'Europe/Stockholm';
