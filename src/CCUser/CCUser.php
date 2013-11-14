@@ -44,17 +44,18 @@
       }
 //-----------------------------------------------------------------------------
 	
-       /**
-       * Authenticate and login a user.
+             /**
+       * Authenticate and login a user. using Check insted of CHeckIfSubmitted
        */
-       // new 11/11 create new class CUserLoogin
-       public function Login() {
-       	   $form = new CFormUserLogin($this);
-       	   $form->CheckIfSubmitted();
-       	   $this->views->SetTitle('Login')
-                ->AddInclude(__DIR__ . '/login.tpl.php', array('login_form'=>$form->GetHTML()));
-       }
-        
+      public function Login() {
+        $form = new CFormUserLogin($this);
+        if($form->Check() === false) {//new
+          $this->AddMessage('notice', 'Some fields did not validate and the form could not be processed.');
+          $this->RedirectToController('login');
+        }
+        $this->views->SetTitle('Login')
+                    ->AddInclude(__DIR__ . '/login.tpl.php', array('login_form'=>$form->GetHTML()));     
+      }
 //-----------------------------------------------------------------------------
       /**
       * Perform a login of the user as callback on a submitted form.

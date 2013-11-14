@@ -98,7 +98,7 @@
           $this->db->ExecuteQuery(self::SQL('insert into user2group'), array($idRootUser, $idAdminGroup));
           $this->db->ExecuteQuery(self::SQL('insert into user2group'), array($idRootUser, $idUserGroup));
           $this->db->ExecuteQuery(self::SQL('insert into user2group'), array($idDoeUser, $idUserGroup));
-          $this->session->AddMessage('notice', 'Successfully created the database tables and created a default admin user as root:root and an ordinary user as doe:doe.<br/>Algoritm:'. $password['algorithm']. '. <br/>Salt: '. $password['salt']. '<br/>Password:'. $password['password'] );
+          $this->session->AddMessage('notice', 'Successfully created the database tables and created a default admin user as root:root and an ordinary user as doe:doe.<br/>');//Algoritm: $password['algorithm']';<br/>Salt: '. $password['salt']. '<br/>Password:'. $password['password'] );
         } catch(Exception$e) {
           die("$e<br/>Failed to open database: " . $this->config['database'][0]['dsn']);
         }
@@ -247,37 +247,8 @@
           case 'plain': return $password === $plain; break;
           default: throw new Exception('Unknown hashing algorithm');
         }
-      }
-  //---------------------------------------------------------------------------- 
+      } 
  
-      /**
-       * Create password.
-       *
-       * $param $plain string the password plain text to use as base.
-       */
-/*      public function CreatePassword($plain) {
-        return md5($plain);
-      }  */
- //---------------------------------------------------------------------------- 
-    
-            /**
-       * Create password.
-       *
-       * $param $plain string the password plain text to use as base.
-       * $param $salt boolean should  we use salt or not when creating the password? default is true.
-       * @returns array with 'salt' and 'password'.
-       */
-/*      public function CreatePassword($plain, $salt=true) {
-        if($salt) {
-          $salt = md5(microtime());
-          $password = md5($salt . $plain);
-        } else {
-          $salt = null;
-          $password = md5($plain);
-        }
-        return array('salt'=>$salt, 'password'=>$password);
-      }
- */    
  //----------------------------------------------------------------------------
        /**
        * Create password.
