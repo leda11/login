@@ -19,12 +19,13 @@ class CFormCreateUser extends CForm {
          ->AddElement(new CFormElementSubmit('create', array('callback'=>array($object, 'DoCreate'))));
          
     $this->SetValidation('acronym', array('not_empty'))
-         ->SetValidation('password', array('not_empty'))
+         ->SetValidation('password', array('min_length'))
          ->SetValidation('password1', array('not_empty'))
          ->SetValidation('name', array('not_empty'))
-         ->SetValidation('email', array('not_empty'));
+         ->SetValidation('email', array('email_address'));
   }
 }
+// funkar bara med en regel  kunde inte ha både mot_empty och min_length
 //Skriv inte kokmmentarer i ocan this sats
 //length minimum 4 letters - password
 // FUNKAR INTE SÄGER OVERLOAD i CForm:: lin 118 -> SetValidation() -passworl

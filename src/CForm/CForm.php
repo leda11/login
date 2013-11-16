@@ -45,21 +45,49 @@
             'test' => 'return true;',
           ),
           'not_empty' => array(
-            'message' => 'Can not be empty.',
+            'message' => 'Can NOT be empty.',
             'test' => 'return $value != "";',
           ),
+          'min_length' => array(
+          	  'message' => 'You must have at least 4 tokens',
+              'test' => function($result){ return strlen($value) < 3 ; }
+          ),
+          'email_address' => array(
+          	  'message' => 'Must be an email adress.', 
+          	  'test' => function($value) { return preg_match('/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i', $value) === 1; } ),
         );
+        //return strlen($value) !> 3 ;'
         $pass = true;
         $messages = array();
         $value = $this['value'];
         foreach($rules as $key => $val) {
           $rule = is_numeric($key) ? $val : $key;
-          if(!isset($tests[$rule])) throw new Exception('Validation of form element failed, no such validation rule exists.');
+          
+        /*  if(!isset($tests[$rule])) throw new Exception("Validation of form element failed, no such validation rule exists. $rule");
           if(eval($tests[$rule]['test']) === false) {
-            $messages[] = $tests[$rule]['message'];
+            $messages[] = $tests[$rule]['message']; // meddelande som kommer under fromelementet
             $pass = false;
           }
-        }
+        }*/
+        // from CForm
+       if(!isset($tests[$rule])) throw new Exception("Validation of form element failed, no such validation rule exists: $rule");
+      $arg = is_numeric($key) ? null : $val;
+
+      $test = ($rule == 'custom_test') ? $arg : $tests[$rule];
+      $status = null;
+      if(is_callable($test['test'])) {
+        $status = $test['test']($value);
+      } else {
+        $status = eval($test['test']);
+      }
+
+      if($status === false) {
+      	  $messages[] = $test['message']. " :". $value . " tecken: " . strlen($value);
+        $pass = false;
+      }
+    }
+        
+        
         if(!empty($messages)) 
         	$this['validation_messages'] = $messages;
         return $pass;
