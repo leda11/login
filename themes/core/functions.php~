@@ -6,9 +6,10 @@
 /**
  * Add static entries in the template file. 
  */
-$ha->data['header'] = '<h1>Welcome to Handy</h1>';
+$ha->data['header'] = 'HANDY';
+$ha->data['slogan'] = 'A PHP-based MVC-inspired CMF';
 $ha->data['footer'] = <<<EOD
-<p>Footer: &copy; Handy: by Lena Dackhammar </p>
+<p>&copy; Handy: by Lena Dackhammar </p>
 
 <p>Tools: 
 <a href="http://validator.w3.org/check/referer">html5</a>
@@ -34,7 +35,7 @@ Docs:
 <a href="http://www.sqlite.org/lang.html">sqlite</a>
 <a href="http://www.blueprintcss.org/">blueprint</a>
 </p>
-
+<hr>
 EOD;
 
 

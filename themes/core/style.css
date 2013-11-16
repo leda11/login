@@ -81,7 +81,7 @@ body{
 .error, .alert, .warning, .notice, .success, .info {
 padding: 0.8em; margin-bottom: 1em; border: 2px dotted #E592B1; }
                                        
-.error, .alert { background:#C4528F; color: #fff;} /* #E552E0*/
+.error, .alert { background:#C4528F; color: #fff;} /** #E552E0*/
 .notice, .warning { background: #CAE; color: #fff;  }
 .success { background:#E6D7EA ; color: #fff;  }
 .info { background: #DBBAE2; color: #fff;  }

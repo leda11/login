@@ -33,6 +33,10 @@ $ha->config['session_name'] = preg_replace('/[:\.\/-_]/', '', __DIR__);
 
 $ha->config['session_key']  = 'handy';
 
+/**
+ * Create user ok
+ */
+$ha->config['create_new_users']= true;;
 
 /**
 * Set database(s).

@@ -56,7 +56,7 @@
           'create table user' 		=> "CREATE TABLE IF NOT EXISTS User (id INTEGER PRIMARY KEY, acronym TEXT KEY, name TEXT, email TEXT, algorithm TEXT, salt TEXT, password TEXT, created DATETIME default (datetime('now')), updated DATETIME default NULL);",
           'create table group' 		=> "CREATE TABLE IF NOT EXISTS Groups (id INTEGER PRIMARY KEY, acronym TEXT KEY, name TEXT, created DATETIME default (datetime('now')), updated DATETIME default NULL);",
           'create table user2group' => "CREATE TABLE IF NOT EXISTS User2Groups (idUser INTEGER, idGroups INTEGER, created DATETIME default (datetime('now')), PRIMARY KEY(idUser, idGroups));",
-          'insert into user'        => 'INSERT INTO User (acronym,name,email, algorithm, salt, password) VALUES (?,?,?,?, ?, ?);',
+          'insert into user'        => 'INSERT INTO User (acronym, name, email, algorithm, salt, password) VALUES (?,?,?,?,?,?);',
           'insert into group'       => 'INSERT INTO Groups (acronym,name) VALUES (?,?);',
           'insert into user2group'  => 'INSERT INTO User2Groups (idUser,idGroups) VALUES (?,?);',
           'check user password'     => 'SELECT * FROM User WHERE (acronym=? OR email=?);', // control of password is removed from this question  - password=? AND 
@@ -169,6 +169,33 @@
     $this->Sprofile = array();// nollsätt profilens innehåll
     $this->session->AddMessage('success', "You have logged out.");
   }
+//----------------------------------------------------------------------------------  
+  /**
+* Create a user profile to database .14/11
+*
+* @param $acronym string the acronym.
+* @param $password string the password plain text to use as base.
+* @param $name string the user full name.
+* @param $email string the user email.
+* @returns boolean true if user was created or else false and sets failure message in session.
+* @returns boolean true if success else false. 
+*/
+  public function Create($acronym, $password, $name, $email) {
+  	$fixedPW= $this->CreatePassword($password);  
+    $this->db->ExecuteQuery(self::SQL('insert into user' ), array($acronym, $name, $email, $fixedPW['algorithm'], $fixedPW['salt'], $fixedPW['password']));    
+    //$this->db->ExecuteQuery(self::SQL('insert into user'), array($acronym, $name, $email, $pwd['algorithm'], $pwd['salt'], $pwd['password']));
+   
+    // check if no ok - leave error messaage
+    if($this->db->RowCount() == 0){
+    	$this->session->AddMessage('error', "New user could not be created");
+    }// test: extra message if ok
+     if($this->db->RowCount() == 1){
+     	 $this->session->AddMessage('succsess', "New user {$name} have been created. Akronym is: {$acronym}</br> password saved: {$fixedPW['password']}");
+    }
+    //$this->session->SetAuthenticatedUser($this->profile);          
+    return true;
+  }
+
  // ----------------------------------------------------------------------------------
  /**
 * Save user profile to database and update user profile in session.

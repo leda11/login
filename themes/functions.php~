@@ -4,6 +4,29 @@
 * This file is included right before the themes own functions.php
 */
 
+function login_menu(){
+	$ha = CHandy::instance();
+	if( $ha->user->IsAuthenticated()){
+		// skapa gravatar
+	
+		//skapa en länk som triggar en utloggning -lagra i en variabel
+		$logstatus = "<a href='" . create_url('user/profile') . "'><img class='gravatar' src='" . get_gravatar(20) . "' alt=''> " . $ha->user['acronym'] . "</a> ";
+		
+		if($ha->user->IsAdministrator()){
+			$logstatus.= "<a href='" . create_url('acp') . "'>acp</a> ";	
+		}	
+		$logstatus .= "Du är inloggad <a href='" . create_url('user/logout') . "'>Logout</a>" ;
+		
+	}else{
+		$logstatus = "Logga in <a href='" . create_url('user/login') . "'>login</a> ";
+
+	}
+	return $logstatus;
+}
+
+ 
+//-----------------------------------------------------------------------------
+
 /**
 * Create a url by prepending the base_url.
 */
@@ -20,7 +43,7 @@ function base_url($url=null) {
 */
 
 function create_url($urlOrController=null, $method=null, $arguments=null) {
-  return ChANDY::Instance()->request->CreateUrl($urlOrController, $method, $arguments);
+  return CHandy::Instance()->request->CreateUrl($urlOrController, $method, $arguments);
 }
 
 //-----------------------------------------------------------------------------
@@ -30,8 +53,8 @@ function create_url($urlOrController=null, $method=null, $arguments=null) {
 */
 
 	function theme_url($url) {
-		$HA = ChANADY::Instance();
-		return "{$HA->request->base_url}themes/{$ly->config['theme']['name']}/{$url}";
+		$Ha = CHandy::Instance();
+		return "{$ha->request->base_url}themes/{$ha->config['theme']['name']}/{$url}";
 	}
 //-----------------------------------------------------------------------------  
   
@@ -60,17 +83,28 @@ function create_url($urlOrController=null, $method=null, $arguments=null) {
     */
     function get_debug() {
       $ha = CHandy::Instance(); 
-      
+      if(empty($ha->config['debug'])) {
+      	  return;
+      }
       $html = null;
       if(isset($ha->config['debug']['db-num-queries']) && $ha->config['debug']['db-num-queries'] && isset($ha->db)) {
       	  $flash = $ha->session->GetFlash('database_numQueries');
       	  $flash = $flash ? "$flash + " : null;
-      	  $html .= "<p>db-num-queries: Database made $flash" . $ha->db->GetNumQueries() . " queries.</p>";
+      	  $html .= "<p>Database (db-num-queries) made $flash" . $ha->db->GetNumQueries() . " queries.</p>";
       	  //$html .= "<p>Database made " . $ha->db->GetNumQueries() . " queries.</p>"; 
       }   	  
-      if(isset($ha->config['debug']['db-queries']) && $ha->config['debug']['db-queries'] && isset($ha->db)) {
-      	  $html .= "<p>db-queries: Database made the following queries.</p><pre>" . implode('<br/><br/>', $ha->db->GetQueries()) . "</pre>";
-      }   
+       if(isset($ha->config['debug']['db-queries']) && $ha->config['debug']['db-queries'] && isset($ha->db)) {
+       	   
+       	   $flash = $ha->session->GetFlash('database_queries');
+       	   $queries = $ha->db->GetQueries();
+       	   if($flash) {
+       	   	   $queries = array_merge($flash, $queries);
+       	   }
+       	$html .= "<p>Database made the following queries.</p><pre>" . implode('<br/><br/>', $queries) . "</pre>";
+       }
+      if(isset($ha->config['debug']['timer']) && $ha->config['debug']['timer']) {
+      	  $html .= "<p>Page was loaded in " . round(microtime(true) - $ha->timer['first'], 5)*1000 . " msecs.</p>";
+      } 
       if(isset($ha->config['debug']['handy']) && $ha->config['debug']['handy']) {
         $html .= "<hr><h3>Debuginformation</h3><p>The content of CHandy:</p><pre>" . htmlent(print_r($ha, true)) . "</pre>";
       }  
@@ -99,4 +133,12 @@ function create_url($urlOrController=null, $method=null, $arguments=null) {
         }
       }
       return $html;
+    }
+    
+//--------------------------------------------------------------------------
+        /**
+    * Get a gravatar based on the user's email.
+    */
+    function get_gravatar($size=null) {
+      return 'http://www.gravatar.com/avatar/' . md5(strtolower(trim(CHandy::Instance()->user['email']))) . '.jpg?' . ($size ? "s=$size" : null);
     }

@@ -221,13 +221,21 @@
 //-------------------------------------------------------------------------------
       /**
        * Return HTML for the form
+       * @param $type string what part of the form to return.
+       * @returns string with HTML for the form.
        */
-      public function GetHTML() {
+      public function GetHTML($type=null) {
         $id      = isset($this->form['id'])      ? " id='{$this->form['id']}'" : null;
         $class    = isset($this->form['class'])   ? " class='{$this->form['class']}'" : null;
         $name    = isset($this->form['name'])    ? " name='{$this->form['name']}'" : null;
         $action = isset($this->form['action'])  ? " action='{$this->form['action']}'" : null;
         $method = " method='post'";
+        // new part to have a more dynamic form that can handle form element and not just the total form.
+        // method can also take an argument know
+         if($type == 'form') {
+         	 return "<form{$id}{$class}{$name}{$action}{$method}>";
+         }
+               
         $elements = $this->GetHTMLForElements();
         $html = <<< EOD
     \n<form{$id}{$class}{$name}{$action}{$method}>
@@ -246,7 +254,7 @@ EOD;
       public function GetHTMLForElements() {
         $html = null;
         foreach($this->elements as $element) {
-          $html .= $element->GetHTML();//calling the CFormElement class method GetHTML
+          $html .= $element->GetHTML();
         }
         return $html;
       }

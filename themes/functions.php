@@ -10,7 +10,7 @@ function login_menu(){
 		// skapa gravatar
 	
 		//skapa en länk som triggar en utloggning -lagra i en variabel
-		$logstatus = "<a href='" . create_url('user/profile') . "'><img class='gravatar' src='" . get_gravatar(20) . "' alt=''> " . $ha->user['acronym'] . "</a> ";
+		$logstatus = "<a href='" . create_url('user/profile') . "'><img class='gravatar' src='" . get_gravatar(20) . "' alt='user gravatar'> " . $ha->user['acronym'] . "</a> ";
 		
 		if($ha->user->IsAdministrator()){
 			$logstatus.= "<a href='" . create_url('acp') . "'>acp</a> ";	
